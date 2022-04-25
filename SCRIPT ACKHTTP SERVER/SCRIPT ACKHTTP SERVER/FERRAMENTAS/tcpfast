@@ -1,0 +1,12 @@
+#!/bin/bash
+### 'MTU & TX
+DEV=`netstat -i | awk '/eth/ {print $1}'`
+/sbin/ifconfig $DEV mtu 9000
+/sbin/ifconfig $DEV txqueuelen 65535
+/sbin/ifconfig lo txqueuelen 65535
+/sbin/ethtool -K $DEV tso off gso off lro off gro on
+### 'CWND'
+/sbin/ip route | while read p; do ip route change $p initcwnd 16384 initrwnd 16384 cwnd 16384 advmss 1460 mtu lock 9000 congctl lock illinois quickack 1; done
+### 'SYSCTL TCP'
+acksyshttpack > /dev/null 2>&1
+

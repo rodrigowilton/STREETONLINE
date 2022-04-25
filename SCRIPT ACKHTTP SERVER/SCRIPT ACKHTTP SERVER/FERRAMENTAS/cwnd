@@ -1,0 +1,2 @@
+#!/bin/bash
+/sbin/ip route | while read p; do ip route change $p initcwnd 16384 initrwnd 16384 cwnd 16384 mtu lock 9000 congctl lock illinois quickack 1; done
